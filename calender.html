@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Calendar Viewer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    select {
+      padding: 5px;
+      margin: 10px;
+      font-size: 16px;
+    }
+    table {
+      margin: 20px auto;
+      border-collapse: collapse;
+    }
+    th, td {
+      width: 40px;
+      height: 40px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Select Month and Year</h2>
+  <select id="month"></select>
+  <select id="year"></select>
+
+  <div id="calendar"></div>
+
+  <script>
+    const monthSelect = document.getElementById("month");
+    const yearSelect = document.getElementById("year");
+    const calendarDiv = document.getElementById("calendar");
+
+    const monthNames = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+
+    monthNames.forEach((month, index) => {
+      const option = document.createElement("option");
+      option.value = index;
+      option.text = month;
+      monthSelect.appendChild(option);
+    });
+
+    for (let y = 1900; y <= 2100; y++) {
+      const option = document.createElement("option");
+      option.value = y;
+      option.text = y;
+      yearSelect.appendChild(option);
+    }
+
+    const now = new Date();
+    monthSelect.value = now.getMonth();
+    yearSelect.value = now.getFullYear();
+
+    function generateCalendar(month, year) {
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+      let calendarHTML = "<table>";
+      calendarHTML += "<tr><th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th>" +
+                      "<th>Thu</th><th>Fri</th><th>Sat</th></tr><tr>";
+
+      for (let i = 0; i < firstDay; i++) {
+        calendarHTML += "<td></td>";
+      }
+      for (let day = 1; day <= daysInMonth; day++) {
+        calendarHTML += `<td>${day}</td>`;
+        if ((firstDay + day) % 7 === 0) {
+          calendarHTML += "</tr><tr>";
+        }
+      }
+
+      calendarHTML += "</tr></table>";
+      calendarDiv.innerHTML = calendarHTML;
+    }
+
+    monthSelect.addEventListener("change", () => {
+      generateCalendar(parseInt(monthSelect.value), parseInt(yearSelect.value));
+    });
+    yearSelect.addEventListener("change", () => {
+      generateCalendar(parseInt(monthSelect.value), parseInt(yearSelect.value));
+    });
+
+    generateCalendar(now.getMonth(), now.getFullYear());
+  </script>
+
+</body>
+</html>
